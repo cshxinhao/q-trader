@@ -16,7 +16,7 @@ logger = setup_logger("Baseline Live")
 
 # Config
 TODAY = pd.Timestamp.today().strftime("%Y-%m-%d")
-TODAY = "2026-03-12"
+# TODAY = "2026-03-12"
 MONEY_PER_STOCK = 25000
 
 
@@ -101,23 +101,24 @@ if __name__ == "__main__":
     sell_names = positions_df[
         ~positions_df["stock_code"].isin(target_positions["symbol"])
     ]["stock_code"].to_list()
-
-    # 2. If target position not in current position, buy it
-    buy_names = target_positions[
-        ~target_positions["symbol"].isin(positions_df["stock_code"])
-    ]["symbol"].to_list()
-
-    # 3. Agg all orders
     sell_orders = positions_df.loc[
         positions_df["stock_code"].isin(sell_names),
         ["datetime", "stock_code", "volume"],
     ].rename(columns={"stock_code": "symbol", "volume": "quantity"})
     sell_orders["quantity"] = -sell_orders["quantity"]
     sell_orders["direction"] = "SELL"
+    sell_orders = sell_orders.loc[sell_orders["quantity"] != 0]
+
+    # 2. If target position not in current position, buy it
+    buy_names = target_positions[
+        ~target_positions["symbol"].isin(positions_df["stock_code"])
+    ]["symbol"].to_list()
     buy_orders = target_positions.loc[
         target_positions["symbol"].isin(buy_names), ["datetime", "symbol", "quantity"]
     ]
     buy_orders["direction"] = "BUY"
+
+    # 3. Agg all orders
     orders = pd.concat([sell_orders, buy_orders], axis=0)
     orders = add_last_close_column(orders)
     orders["amount"] = orders["quantity"] * orders["last_close"]
