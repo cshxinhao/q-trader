@@ -16,6 +16,7 @@ logger = setup_logger("Baseline Live")
 
 # Config
 TODAY = pd.Timestamp.today().strftime("%Y-%m-%d")
+TODAY = "2026-03-12"
 MONEY_PER_STOCK = 25000
 
 
@@ -40,6 +41,9 @@ def get_target_positions():
     target_positions["quantity"] = (
         (MONEY_PER_STOCK / target_positions["last_close"]).astype(int).round(-2)
     )
+    target_positions["target_amount"] = (
+        target_positions["quantity"] * target_positions["last_close"]
+    )
     return target_positions
 
 
@@ -61,7 +65,7 @@ if __name__ == "__main__":
     account_id = os.getenv("ACCOUNT_ID")
 
     # session_id为会话编号，策略使用方对于不同的Python策略需要使用不同的会话编号
-    session_id = 123456
+    session_id = 111111
     xt_trader = XtQuantTrader(path, session_id)
     acc = StockAccount(account_id, "STOCK")
     callback = MyXtQuantTraderCallback()

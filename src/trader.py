@@ -22,7 +22,9 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :return:
         """
         logger.info("on order callback:")
-        logger.info(order.stock_code, order.order_status, order.order_sysid)
+        logger.info(
+            f"stock_code: {order.stock_code}, order_status: {order.order_status}, order_sysid: {order.order_sysid}, traded_volume@price: {order.traded_volume}@{order.traded_price}, order_volume: {order.order_volume}"
+        )
 
     def on_stock_trade(self, trade):
         """
@@ -31,7 +33,9 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :return:
         """
         logger.info("on trade callback")
-        logger.info(trade.account_id, trade.stock_code, trade.order_id)
+        logger.info(
+            f"account_id: {trade.account_id}, stock_code: {trade.stock_code}, order_id: {trade.order_id}, traded_volume@price: {trade.traded_volume}@{trade.traded_price}, traded_amount: {trade.traded_amount}"
+        )
 
     def on_order_error(self, order_error):
         """
@@ -40,7 +44,9 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :return:
         """
         logger.error("on order_error callback")
-        logger.error(order_error.order_id, order_error.error_id, order_error.error_msg)
+        logger.error(
+            f"order_id: {order_error.order_id}, error_id: {order_error.error_id}, error_msg: {order_error.error_msg}"
+        )
 
     def on_cancel_error(self, cancel_error):
         """
@@ -50,7 +56,7 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         """
         logger.error("on cancel_error callback")
         logger.error(
-            cancel_error.order_id, cancel_error.error_id, cancel_error.error_msg
+            f"order_id: {cancel_error.order_id}, error_id: {cancel_error.error_id}, error_msg: {cancel_error.error_msg}"
         )
 
     def on_order_stock_async_response(self, response):
@@ -60,7 +66,9 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :return:
         """
         logger.info("on_order_stock_async_response")
-        logger.info(response.account_id, response.order_id, response.seq)
+        logger.info(
+            f"account_id: {response.account_id}, order_id: {response.order_id}, seq: {response.seq}"
+        )
 
     def on_account_status(self, status):
         """
@@ -68,4 +76,8 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :return:
         """
         logger.info("on_account_status")
-        logger.info(status.account_id, status.account_type, status.status)
+        logger.info(
+            f"account_id: {status.account_id}, account_type: {status.account_type}, status: {status.status}"
+        )
+
+        # logger.info(status.account_id, status.account_type, status.status)
